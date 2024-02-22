@@ -33,5 +33,4 @@ class DataStore @Inject constructor(private val context: Context) {
         it[booleanPreferencesKey(Constants.IS_FIRST_TIME)] ?: true
     }
 
-
 }

@@ -96,8 +96,7 @@ fun TasksScreen(tasksViewModel: TasksViewModel, navController: NavController, na
                 Spacer(modifier = Modifier.height(40.dp))
                 LazyColumn {
                     items(tasks){ task ->
-                        ItemTask(task = task, onLongClick = { tasksViewModel.toggleDialog(task) },
-                            onClick = { tasksViewModel.toggleCheckTask(task) })
+                        ItemTask(task = task, tasksViewModel)
                         if (task.isModalShowed){
                             DeleteDialog(tasksViewModel = tasksViewModel, task = task)
                         }
@@ -111,8 +110,7 @@ fun TasksScreen(tasksViewModel: TasksViewModel, navController: NavController, na
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ItemTask(task: TaskModel, onLongClick: (TaskModel) -> Unit,
-             onClick: (TaskModel) -> Unit){
+fun ItemTask(task: TaskModel, tasksViewModel: TasksViewModel){
     val boxColor by animateColorAsState(
         when (task.isSelected) {
             true -> Color.White
@@ -123,7 +121,8 @@ fun ItemTask(task: TaskModel, onLongClick: (TaskModel) -> Unit,
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .combinedClickable(onLongClick = { onLongClick(task) }, onClick = {onClick(task)}),
+                .combinedClickable(onLongClick = { tasksViewModel.toggleDialog(task) },
+                    onClick = {tasksViewModel.toggleCheckTask(task)}),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = task.hourFrom, color = Color.White, fontWeight = FontWeight.Bold)
