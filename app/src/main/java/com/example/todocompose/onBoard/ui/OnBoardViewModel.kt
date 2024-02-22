@@ -25,7 +25,7 @@ class OnBoardViewModel @Inject constructor(private val saveNameUseCase: SaveName
                 saveNameUseCase(name)
                 changeFirstTimeUseCase()
             }
-            navController.navigate(Constants.TO_DO_SCREEN)
+            navController.navigate(Constants.TO_DO_SCREEN){ popUpTo(0) }
         }
     }
 
