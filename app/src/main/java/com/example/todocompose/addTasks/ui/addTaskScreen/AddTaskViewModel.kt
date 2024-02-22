@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddTaskViewmodel @Inject constructor(private val insertTaskInDbUseCase: InsertTaskInDbUseCase)  :ViewModel(){
+class AddTaskViewModel @Inject constructor(private val insertTaskInDbUseCase: InsertTaskInDbUseCase)  :ViewModel(){
 
     private val _isDialogFromOpened = MutableStateFlow(false)
     val isDialogFromOpened: StateFlow<Boolean> = _isDialogFromOpened

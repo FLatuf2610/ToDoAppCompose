@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,11 +52,11 @@ import com.example.todocompose.common.Constants
 
 
 @Composable
-fun TasksScreen(tasksViewModel: TasksViewModel, navController: NavController) {
+fun TasksScreen(tasksViewModel: TasksViewModel, navController: NavController, name: String) {
     LaunchedEffect(key1 = true){
-        tasksViewModel.onCreateViewmodel()
+        tasksViewModel.onCreateViewModel()
     }
-    val name by tasksViewModel.name.collectAsState()
+
     val tasks by tasksViewModel.tasks.collectAsState()
 
     Scaffold(
@@ -72,11 +71,11 @@ fun TasksScreen(tasksViewModel: TasksViewModel, navController: NavController) {
             }
         },
         floatingActionButtonPosition = FabPosition.End
-    ) {
+    ) { pad ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(pad)
                 .background(Color.Black)
         ){
             Column(
@@ -91,16 +90,16 @@ fun TasksScreen(tasksViewModel: TasksViewModel, navController: NavController) {
                     fontSize = 35.sp,
                     modifier = Modifier.padding(top = 64.dp, start = 24.dp)
                 )
-                Text(text = if (tasks.size >0)"You have ${tasks.size} tasks to complete"
+                Text(text = if (tasks.isNotEmpty())"You have ${tasks.size} tasks to complete"
                     else "You don´t have tasks!", color = Color.LightGray,
                     modifier = Modifier.padding(start = 28.dp), fontSize = 18.sp)
                 Spacer(modifier = Modifier.height(40.dp))
-                LazyColumn(){
-                    items(tasks){
-                        ItemTask(task = it, onLongClick = { tasksViewModel.toggleDialog(it) },
-                            onClick = { tasksViewModel.toggleCheckTask(it) })
-                        if (it.isModalShowed){
-                            DeleteDialog(tasksViewModel = tasksViewModel, task = it)
+                LazyColumn {
+                    items(tasks){ task ->
+                        ItemTask(task = task, onLongClick = { tasksViewModel.toggleDialog(task) },
+                            onClick = { tasksViewModel.toggleCheckTask(task) })
+                        if (task.isModalShowed){
+                            DeleteDialog(tasksViewModel = tasksViewModel, task = task)
                         }
                     }
                 }

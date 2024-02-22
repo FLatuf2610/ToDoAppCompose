@@ -15,13 +15,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
@@ -39,7 +36,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,19 +54,18 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.example.todocompose.R
 import com.example.todocompose.common.AddTaskTextField
-import com.example.todocompose.common.Constants
 import com.example.todocompose.common.MyButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AddScreen(addTaskViewmodel: AddTaskViewmodel, navController: NavController){
+fun AddScreen(addTaskViewModel: AddTaskViewModel, navController: NavController){
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
-    val hourFrom by addTaskViewmodel.hourFrom
-    val hourTo by addTaskViewmodel.hourTo
-    val openDialogFrom by addTaskViewmodel.isDialogFromOpened.collectAsState()
-    val openDialogTo by addTaskViewmodel.isDialogToOpened.collectAsState()
+    val hourFrom by addTaskViewModel.hourFrom
+    val hourTo by addTaskViewModel.hourTo
+    val openDialogFrom by addTaskViewModel.isDialogFromOpened.collectAsState()
+    val openDialogTo by addTaskViewModel.isDialogToOpened.collectAsState()
     Scaffold(
         topBar = { TopAppBar( title = {},
             navigationIcon = { IconButton(onClick = { navController.popBackStack() }) {
@@ -101,7 +96,7 @@ fun AddScreen(addTaskViewmodel: AddTaskViewmodel, navController: NavController){
                     modifier = Modifier.padding(top = 48.dp, start = 24.dp, bottom = 48.dp))
                 AddTaskTextField(
                     value = title,
-                    onTextChange = { title = it },
+                    onTextChange = { str -> title = str },
                     placeHolder = "Title",
                     singleLine = true,
                     modifier = Modifier
@@ -112,7 +107,7 @@ fun AddScreen(addTaskViewmodel: AddTaskViewmodel, navController: NavController){
                 Spacer(modifier = Modifier.height(24.dp))
                 AddTaskTextField(
                     value = description,
-                    onTextChange = { description = it },
+                    onTextChange = { str -> description = str },
                     placeHolder = "Description",
                     maxLines = 3,
                     modifier = Modifier
@@ -139,7 +134,7 @@ fun AddScreen(addTaskViewmodel: AddTaskViewmodel, navController: NavController){
                         keyboardType = KeyboardType.Number,
                         readOnly = true
                     )
-                    TextButton(onClick = { addTaskViewmodel.toggleFromDialog() },
+                    TextButton(onClick = { addTaskViewModel.toggleFromDialog() },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = Color.White
                         )) {
@@ -165,7 +160,7 @@ fun AddScreen(addTaskViewmodel: AddTaskViewmodel, navController: NavController){
                         keyboardType = KeyboardType.Number,
                         readOnly = true
                     )
-                    TextButton(onClick = { addTaskViewmodel.toggleToDialog() },
+                    TextButton(onClick = { addTaskViewModel.toggleToDialog() },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = Color.White
                         )) {
@@ -173,7 +168,7 @@ fun AddScreen(addTaskViewmodel: AddTaskViewmodel, navController: NavController){
                     }
                 }
                 
-                MyButton(onClick = { addTaskViewmodel.addTask(title, description, hourFrom, hourTo)
+                MyButton(onClick = { addTaskViewModel.addTask(title, description, hourFrom, hourTo)
                                    navController.popBackStack()},
                     modifier = Modifier
                         .fillMaxWidth()
@@ -182,18 +177,18 @@ fun AddScreen(addTaskViewmodel: AddTaskViewmodel, navController: NavController){
                     isEnabled = title.trim().isNotBlank() && hourTo.trim().isNotBlank() && hourFrom.trim().isNotBlank())
             }
         }
-        MyDialog(addTaskViewmodel = addTaskViewmodel, isOpen = openDialogFrom)
-        MyDialog(addTaskViewmodel = addTaskViewmodel, isOpen = openDialogTo, 1)
+        MyDialog(addTaskViewModel = addTaskViewModel, isOpen = openDialogFrom)
+        MyDialog(addTaskViewModel = addTaskViewModel, isOpen = openDialogTo, 1)
 
     }
 }
 
 @Composable
-fun  MyDialog(addTaskViewmodel: AddTaskViewmodel, isOpen: Boolean, typeDialog: Int = 0){
+fun  MyDialog(addTaskViewModel: AddTaskViewModel, isOpen: Boolean, typeDialog: Int = 0){
     val timePickerState = rememberTimePickerState()
     if (isOpen) {
-        Dialog(onDismissRequest = { if (typeDialog != 0) addTaskViewmodel.toggleToDialog()
-        else addTaskViewmodel.toggleFromDialog()},
+        Dialog(onDismissRequest = { if (typeDialog != 0) addTaskViewModel.toggleToDialog()
+        else addTaskViewModel.toggleFromDialog()},
             properties = DialogProperties(dismissOnClickOutside = true)) {
             Column(
                 modifier = Modifier
@@ -220,12 +215,12 @@ fun  MyDialog(addTaskViewmodel: AddTaskViewmodel, isOpen: Boolean, typeDialog: I
                     ))
                 MyButton(onClick = {
                     if (typeDialog != 0) {
-                        addTaskViewmodel.setHourFromDialog(timePickerState, 1)
-                        addTaskViewmodel.toggleToDialog()
+                        addTaskViewModel.setHourFromDialog(timePickerState, 1)
+                        addTaskViewModel.toggleToDialog()
                     }
                     else {
-                        addTaskViewmodel.setHourFromDialog(timePickerState)
-                        addTaskViewmodel.toggleFromDialog()
+                        addTaskViewModel.setHourFromDialog(timePickerState)
+                        addTaskViewModel.toggleFromDialog()
                     }},
                     modifier = Modifier
                         .fillMaxWidth()

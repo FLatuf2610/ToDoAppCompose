@@ -15,7 +15,7 @@ class Repository @Inject constructor(private val dao: TasksDao) {
     suspend fun getTasks() :Flow<List<TaskModel>> {
         return withContext(Dispatchers.IO){
             val result = dao.getTasks()
-                 result.map { it.map { it.toDomain() } }
+                 result.map { tasks -> tasks.map { it.toDomain() } }
         }
     }
 
