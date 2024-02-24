@@ -44,7 +44,9 @@ fun MyButton(onClick :() -> Unit, modifier: Modifier,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White,
-            contentColor = Color.Black
+            contentColor = Color.Black,
+            disabledContentColor = Color.DarkGray,
+            disabledContainerColor = Color.LightGray
         ),
         contentPadding = PaddingValues(vertical = 20.dp, horizontal = 8.dp),
         shape = RoundedCornerShape(12.dp),
@@ -59,7 +61,8 @@ fun AddTaskTextField(value: String, onTextChange: (String) -> Unit,
                      placeHolder: String, singleLine: Boolean = false,
                      maxLines: Int = 1, modifier: Modifier,
                      keyboardType: KeyboardType = KeyboardType.Text,
-                     helperText: String = "", readOnly: Boolean = false){
+                     helperText: String = "", readOnly: Boolean = false,
+                     enabled: Boolean = true){
     OutlinedTextField(
         value = value, onValueChange = { onTextChange(it) },
         placeholder = { Text(text = placeHolder) },
@@ -71,20 +74,17 @@ fun AddTaskTextField(value: String, onTextChange: (String) -> Unit,
             unfocusedTextColor = Color.White,
             focusedTextColor = Color.White,
             unfocusedBorderColor = Color.White,
-            focusedBorderColor = Color.White
+            focusedBorderColor = Color.White,
+            disabledContainerColor = Color.Transparent,
+            disabledBorderColor = Color.White,
+            disabledPlaceholderColor = Color.DarkGray
         ),
         modifier = modifier,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType
         ),
         supportingText = { Text(text = helperText) },
-        readOnly = readOnly
+        readOnly = readOnly,
+        enabled = enabled
     )
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun TimesInput(){
-
-
 }

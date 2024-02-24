@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.example.todocompose.addTasks.ui.addTaskScreen
 
@@ -130,9 +130,11 @@ fun AddScreen(addTaskViewModel: AddTaskViewModel, navController: NavController){
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .clickable { addTaskViewModel.toggleFromDialog() },
                         keyboardType = KeyboardType.Number,
-                        readOnly = true
+                        readOnly = true,
+                        enabled = false
                     )
                     TextButton(onClick = { addTaskViewModel.toggleFromDialog() },
                         colors = ButtonDefaults.textButtonColors(
@@ -156,9 +158,11 @@ fun AddScreen(addTaskViewModel: AddTaskViewModel, navController: NavController){
                         singleLine = true,
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .clickable { addTaskViewModel.toggleToDialog() },
                         keyboardType = KeyboardType.Number,
-                        readOnly = true
+                        readOnly = true,
+                        enabled = false
                     )
                     TextButton(onClick = { addTaskViewModel.toggleToDialog() },
                         colors = ButtonDefaults.textButtonColors(
